@@ -24,8 +24,14 @@ import Routes from './routes.js'
 // Import App Component
 import App from './app'
 
+import chartist from 'vue-chartist'
+
 // Init F7 Vue Plugin
 Vue.use(Framework7Vue)
+Vue.use(chartist, {
+    messageNoData: "You have not enough data",
+    classNoData: "empty"
+})
 
 // Init App
 new Vue({

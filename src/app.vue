@@ -83,9 +83,17 @@
             </f7-navbar>
             <!-- Page Content -->
             <f7-block-title>Welcome to my App</f7-block-title>
-            
-            <VueC3 :handler="handler"></VueC3>
-            
+
+            <f7-block inner>
+              <!--VueC3 :handler="handler"></VueC3-->
+              <chartist
+                id-chart="ct-chart"
+                :ratio="chart.ratio"
+                :type="chart.type"
+                :data="chart.data"
+                :options="chart.options" />
+            </f7-block>
+
             <f7-block inner>
               <p>Duis sed erat ac eros ultrices pharetra id ut tellus. Praesent rhoncus enim ornare ipsum aliquet ultricies. Pellentesque sodales erat quis elementum sagittis.</p>
             </f7-block>
@@ -174,6 +182,7 @@ import _ from 'lodash'
 import VueC3 from 'vue-c3'
 
 import * as api from '@/util/function'
+import '@/css/chartist.min.css'
 import '@/css/c3.min.css'
 
 const apiServer = {
@@ -189,10 +198,34 @@ const apiServer = {
 }
 
 export default {
-  
   data: () => ({
     intervalId: null,
     handler: new Vue(),
+
+    chartData: {
+      labels: ["A", "B", "C"],
+      series:[[1, 3, 2]]
+    },
+    chartOptions: {
+      lineSmooth: false
+    },
+
+    chart: {
+      ratio: 'ct-minor-seventh',
+      type: 'Line',
+      data: {
+        labels: ["A", "B", "C"],
+        series:[[1, 3, 2]]
+      },
+      options: [{
+        event: 'draw',
+        fn: context => {
+          context.element.attr({
+            style: `stroke: hsl(${Math.floor(this.$chartist.getMultiValue(context.value) / 100 * 100)}, 60%, 50%);`
+          })
+        }
+      }],
+    },
   }),
   mounted() {
     console.log(api.unix2date(1510894800, "YYYY-MM-DD HH"))
@@ -240,6 +273,11 @@ export default {
         const server = _.findKey(apiServer, {url: url})
         switch (server) {
           case 'bitcoin':
+            this.chart.data.labels = _.takeRight(_.map(data.values, (i) => (api.unix2date(i.x, "MM-DD"))), 20)
+            this.chart.data.series = [
+              _.takeRight(_.map(data.values, 'y'), 20)
+            ]
+
             return [
               _.concat('x', _.takeRight(_.map(data.values, (i) => (api.unix2date(i.x, "YYYY-MM-DD"))), 30)),
               _.concat('y', _.takeRight(_.map(data.values, 'y'), 30)),
@@ -271,6 +309,7 @@ export default {
 </script>
 
 <style>
+
 /* Default Status bar background */
 .statusbar-overlay {
     background: pink;
@@ -278,9 +317,20 @@ export default {
     -webkit-transition: 400ms;
     transition: 400ms;
 }
- 
+
 /* Change Status bar background when panel opened */
 body.with-panel-left-cover .statusbar-overlay {
     background: #222;
-}    
+}
+
+.empty {
+    border-radius: 10px;
+    text-align: center;
+    text-shadow: 2px 2px black;
+    line-height: 450px;
+    background: gray;
+    color: white;
+    font-weight: bold;
+    font-size: 40px;
+}
 </style>

@@ -37,7 +37,8 @@
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
     "vue": "^2.2.4",
-    "vue-c3": "^1.1.1"
+    "vue-c3": "^1.1.1",
+    "vue-chartist": "^2.1.2"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",
