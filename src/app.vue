@@ -91,7 +91,9 @@
                 :ratio="chart.ratio"
                 :type="chart.type"
                 :data="chart.data"
-                :options="chart.options" />
+                :options="chart.options"
+                :event-handlers="chart.eventHandlers"
+              ></chartist>
             </f7-block>
 
             <f7-block inner>
@@ -179,11 +181,9 @@
 <script>
 import Vue from 'vue'
 import _ from 'lodash'
-import VueC3 from 'vue-c3'
 
-import * as api from '@/util/function'
+import { api, unix2date, thousand } from '@/util/function'
 import '@/css/chartist.min.css'
-import '@/css/c3.min.css'
 
 const apiServer = {
   bitcoin: {
@@ -200,15 +200,6 @@ const apiServer = {
 export default {
   data: () => ({
     intervalId: null,
-    handler: new Vue(),
-
-    chartData: {
-      labels: ["A", "B", "C"],
-      series:[[1, 3, 2]]
-    },
-    chartOptions: {
-      lineSmooth: false
-    },
 
     chart: {
       ratio: 'ct-minor-seventh',
@@ -217,25 +208,43 @@ export default {
         labels: ["A", "B", "C"],
         series:[[1, 3, 2]]
       },
-      options: [{
+      options: {
+        axisX: {
+          scaleMinSpace: 120,
+          //labelInterpolationFnc: function(value) {
+          //  return unix2date(value, "MM-DD")
+          //},
+          labelInterpolationFnc: function(value, index) {
+            return index % 2 === 0 ? unix2date(value, "MM-DD") : null;
+          },
+        },
+        axisY: {
+          offset: 60,
+          onlyInteger: true,
+          labelInterpolationFnc: function(value) {
+            return thousand(value)
+          },
+          scaleMinSpace: 15,
+        }
+      },
+      eventHandlers: [{
         event: 'draw',
-        fn: context => {
+        fn: (context) => {
           context.element.attr({
-            style: `stroke: hsl(${Math.floor(this.$chartist.getMultiValue(context.value) / 100 * 100)}, 60%, 50%);`
+            style: `stroke: hsl(${Math.floor(Vue.chartist.getMultiValue(context.value) / 100 * 100)}, 60%, 50%);`
           })
         }
       }],
     },
   }),
   mounted() {
-    console.log(api.unix2date(1510894800, "YYYY-MM-DD HH"))
-    this.initChart()
     this.startDrawChart()
   },
   destroyed() {
     this.stopDrawChart()
   },
   created() {
+    console.log(this.$chartist)
     this.drawChart()
   },
   methods: {
@@ -245,43 +254,16 @@ export default {
     stopDrawChart() {
       clearInterval(this.intervalId);
     },
-    initChart() {
-      this.handler.$emit('init', {
-        data: {
-          x: 'x',
-          columns: [],
-        },
-        axis : {
-          x : {
-            type : 'timeseries',
-            tick: {
-              format: '%Y-%m-%d'
-            }
-          }
-        }
-      })
-    },
     async drawChart () {
-      const option = {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Max-Age': 3600,
-        },
-      }
-
       const convertXY = (url, data) => {
         const server = _.findKey(apiServer, {url: url})
         switch (server) {
           case 'bitcoin':
-            this.chart.data.labels = _.takeRight(_.map(data.values, (i) => (api.unix2date(i.x, "MM-DD"))), 20)
-            this.chart.data.series = [
-              _.takeRight(_.map(data.values, 'y'), 20)
-            ]
-
-            return [
-              _.concat('x', _.takeRight(_.map(data.values, (i) => (api.unix2date(i.x, "YYYY-MM-DD"))), 30)),
-              _.concat('y', _.takeRight(_.map(data.values, 'y'), 30)),
-            ]
+            //return data.values
+            return {
+              labels: _.takeRight(_.map(data.values, 'x'), 20),
+              series: [ _.takeRight(_.map(data.values, 'y'), 20) ],
+            }
             break;
           case 'coindesk_realtime':
           case 'coindesk_history':
@@ -291,20 +273,12 @@ export default {
         }
       }
 
-      api.get(apiServer.bitcoin.url, option)
+      await api.get(apiServer.bitcoin.url)
       .then((res) => (convertXY(apiServer.bitcoin.url, res.data)))
-      .then(chartData => {
-        this.handler.$emit('dispatch', (chart) => {
-          chart.load({
-            columns: chartData,
-          })
-        })
-      })
+      .then(chartData => { this.chart.data = chartData })
     },
   },
-  components :{
-    VueC3,
-  }
+  components :{}
 }
 </script>
 
