@@ -97,6 +97,14 @@
             </f7-block>
 
             <f7-block inner>
+              <ul>
+                <li v-for="item in realtimePrice">
+                  {{ item.from }} - {{ item.to }} - {{item.market }} : {{ thousand(item.price) }}
+                </li>
+              </ul>
+            </f7-block>
+
+            <f7-block inner>
               <p>Duis sed erat ac eros ultrices pharetra id ut tellus. Praesent rhoncus enim ornare ipsum aliquet ultricies. Pellentesque sodales erat quis elementum sagittis.</p>
             </f7-block>
             <f7-block-title>Navigation</f7-block-title>
@@ -185,21 +193,37 @@ import _ from 'lodash'
 import { api, unix2date, thousand } from '@/util/function'
 import '@/css/chartist.min.css'
 
-const apiServer = {
-  bitcoin: {
-    url: 'https://api.blockchain.info/charts/market-price?timespan=5weeks&rollingAverage=8hours&format=json&cors=true'
+const cryptocompare = {
+  coinList: 'https://min-api.cryptocompare.com/data/all/coinlist',
+  price: 'https://min-api.cryptocompare.com/data/price',
+  historical: {
+    minute: 'https://min-api.cryptocompare.com/data/histominute',
+    hour: 'https://min-api.cryptocompare.com/data/histohour',
+    day: 'https://min-api.cryptocompare.com/data/histoday',
   },
-  coindesk_realtime: {
-    url: 'https://api.coindesk.com/v1/bpi/currentprice/KRW.json'
-  },
-  coindesk_history: {
-    url: 'https://api.coindesk.com/v1/bpi/historical/close.json?currency=KRW&start=2017-11-01&end=2017-12-19'
-  }
 }
+/*
+https://www.coindesk.com/api/
+
+bitcoin: {
+  url: 'https://api.blockchain.info/charts/market-price?timespan=5weeks&rollingAverage=8hours&format=json&cors=true'
+},
+cryptocompare_reltime: {
+  url: https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=KRW,BTC,USD,EUR
+}
+coindesk_realtime: {
+  url: 'https://api.coindesk.com/v1/bpi/currentprice/KRW.json'
+},
+coindesk_history: {
+  url: 'https://api.coindesk.com/v1/bpi/historical/close.json?currency=KRW&start=2017-11-01&end=2017-12-19'
+}
+*/
 
 export default {
   data: () => ({
-    intervalId: null,
+    intervalId: [],
+    coinList: {},
+    realtimePrice: {},
 
     chart: {
       ratio: 'ct-minor-seventh',
@@ -237,23 +261,87 @@ export default {
       }],
     },
   }),
+  created() {
+    //this.drawChart()
+    this.getCoinList()
+    this.startDrawRealtimePrice()
+  },
   mounted() {
-    this.startDrawChart()
+    //this.startDrawHistoricalChart()
   },
   destroyed() {
-    this.stopDrawChart()
+    this.clearAllIntervals()
   },
-  created() {
-    console.log(this.$chartist)
-    this.drawChart()
-  },
+
   methods: {
-    startDrawChart() {
+    getCoinList() {
+      this.coinList = api.get(cryptocompare.coinList).
+        then(res => {
+          if (res.data.Response === 'Success') {
+            return res.Data
+          } else {
+            console.log(res)
+            throw new Error(res.message)
+          }
+        }).
+        catch(e => console.error(e))
+    },
+
+    startDrawRealtimePrice() {
+      this.drawRealtimePrice()
+      this.intervalId.push(
+        setInterval(this.drawRealtimePrice, 1000 * 10)
+      )
+    },
+
+    startDrawHistoricalChart() {
       this.intervalId = setInterval(this.drawChart, 1000 * 60);
     },
-    stopDrawChart() {
-      clearInterval(this.intervalId);
+
+    clearAllIntervals() {
+      this.intervalId.forEach(id => {
+        clearInterval(id);
+      })
     },
+
+    thousand, // make comma 1000,000.00
+
+
+    drawRealtimePrice() {
+      this.getRealtimePrice('BTC', 'KRW', 'CCCAGG')
+      this.getRealtimePrice('BTC', 'KRW', 'Bithumb')
+      this.getRealtimePrice('ETH', 'KRW')
+    },
+
+    async getRealtimePrice(from='BTC', to='KRW', market='CCCAGG') {
+      const url = `${cryptocompare.price}?fsym=${from}&tsyms=${to}&e=${market}`
+      const keyName = `${from}_${to}_${market}`
+
+      try {
+        const price = await api.get(url).
+          then(res => {
+            if (res.status === 200) {
+              return res.data[to]
+            } else {
+              throw new Error(res.message)
+            }
+          })
+
+        Vue.set(this.realtimePrice, keyName, {
+          from,
+          to,
+          market,
+          price,
+        })
+        console.log(price)
+      } catch(e) {
+        console.error('getRealtimePrice Error!', e);
+      }
+
+    },
+
+
+
     async drawChart () {
       const convertXY = (url, data) => {
         const server = _.findKey(apiServer, {url: url})
@@ -278,7 +366,8 @@ export default {
       .then(chartData => { this.chart.data = chartData })
     },
   },
-  components :{}
+
+  components :{},
 }
 </script>
 

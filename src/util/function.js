@@ -15,7 +15,8 @@ const get = (url, option) => {
     url,
     option,
   })
-  .then((res) =>  (res))
+  .then(res => (res))
+  .catch(e => { throw e })
 }
 
 export const api = {
