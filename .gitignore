@@ -41,3 +41,5 @@ node_modules/
 dist/
 www/
 npm-debug.log
+
+platforms/
