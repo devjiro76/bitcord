@@ -41,5 +41,4 @@ node_modules/
 dist/
 www/
 npm-debug.log
-
-platforms/
+yarn.lock

@@ -4,7 +4,8 @@
   "description": "Framework7 Vue + Webpack starter app template",
   "scripts": {
     "dev": "node build/dev-server.js",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "serve": "./node_modules/.bin/phonegap serve"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,7 @@
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
     "numeral": "^2.0.6",
+    "phonegap": "^7.1.1",
     "vue": "^2.5.13",
     "vue-c3": "^1.1.1",
     "vue-chartist": "^2.1.2",
