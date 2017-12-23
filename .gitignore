@@ -42,3 +42,4 @@ dist/
 www/
 npm-debug.log
 yarn.lock
+package-lock.json
