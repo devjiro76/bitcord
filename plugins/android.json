@@ -12,9 +12,6 @@
     },
     "cordova-plugin-statusbar": {
       "PACKAGE_NAME": "kr.devjiro.bitcord"
-    },
-    "cordova-plugin-whitelist": {
-      "PACKAGE_NAME": "kr.devjiro.bitcord"
     }
   },
   "dependent_plugins": {}

@@ -1,28 +1,28 @@
 {
-  "_from": "cordova-plugin-statusbar@2.3.0",
-  "_id": "cordova-plugin-statusbar@2.3.0",
+  "_from": "cordova-plugin-statusbar@^2.3.0",
+  "_id": "cordova-plugin-statusbar@2.4.0",
   "_inBundle": false,
-  "_integrity": "sha1-MU4dAJxlkQzf3gNL/KE71QLJ5eA=",
+  "_integrity": "sha1-JOspc3ldEPbxrjIC90+Ix9mQzyA=",
   "_location": "/cordova-plugin-statusbar",
   "_phantomChildren": {},
   "_requested": {
-    "type": "version",
+    "type": "range",
     "registry": true,
-    "raw": "cordova-plugin-statusbar@2.3.0",
+    "raw": "cordova-plugin-statusbar@^2.3.0",
     "name": "cordova-plugin-statusbar",
     "escapedName": "cordova-plugin-statusbar",
-    "rawSpec": "2.3.0",
+    "rawSpec": "^2.3.0",
     "saveSpec": null,
-    "fetchSpec": "2.3.0"
+    "fetchSpec": "^2.3.0"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/cordova-plugin-statusbar/-/cordova-plugin-statusbar-2.3.0.tgz",
-  "_shasum": "314e1d009c65910cdfde034bfca13bd502c9e5e0",
-  "_spec": "cordova-plugin-statusbar@2.3.0",
-  "_where": "/Users/jiro/Documents/study/bitcord",
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-statusbar/-/cordova-plugin-statusbar-2.4.0.tgz",
+  "_shasum": "24eb2973795d10f6f1ae3202f74f88c7d990cf20",
+  "_spec": "cordova-plugin-statusbar@^2.3.0",
+  "_where": "D:\\devjiro76\\bitcord",
   "author": {
     "name": "Apache Software Foundation"
   },
@@ -77,5 +77,5 @@
     "test": "npm run jshint"
   },
   "types": "./types/index.d.ts",
-  "version": "2.3.0"
+  "version": "2.4.0"
 }
