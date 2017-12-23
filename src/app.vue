@@ -96,9 +96,11 @@
               ></chartist>
             </f7-block>
 
-            
+
             <div>
-              <RealtimePriceList></RealtimePriceList>
+              <FavoriteList></FavoriteList>
+              <f7-button @click="addFavorite1">haha</f7-button>
+              <f7-button @click="addFavorite2">haha</f7-button>
             </div>
 
             <f7-block inner>
@@ -187,7 +189,7 @@
 import Vue from 'vue'
 import _ from 'lodash'
 
-import RealtimePriceList from '@/containers/RealtimePriceList'
+import FavoriteList from '@/components/FavoriteList'
 
 import { api } from '@/util/function'
 import '@/css/chartist.min.css'
@@ -242,6 +244,24 @@ export default {
   },
 
   methods: {
+    addFavorite1() {
+      this.$store.dispatch('add_favorite', {
+        favId: 3,
+        from: 'ETH',
+        to: 'BTC',
+        market: 'CCCAGG'
+      })
+    },
+
+    addFavorite2() {
+      this.$store.dispatch('add_favorite', {
+        favId: 4,
+        from: 'LTC',
+        to: 'USD',
+        market: 'CCCAGG'
+      })
+    },
+
     async drawChart () {
       const convertXY = (url, data) => {
         const server = _.findKey(apiServer, {url: url})
@@ -268,7 +288,7 @@ export default {
   },
 
   components :{
-    RealtimePriceList,
+    FavoriteList,
   },
 }
 </script>
