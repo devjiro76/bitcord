@@ -4,8 +4,7 @@
   "description": "Framework7 Vue + Webpack starter app template",
   "scripts": {
     "dev": "node build/dev-server.js",
-    "build": "node build/build.js",
-    "serve": "./node_modules/.bin/phonegap serve"
+    "build": "node build/build.js"
   },
   "repository": {
     "type": "git",
