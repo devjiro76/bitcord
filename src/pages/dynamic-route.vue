@@ -12,7 +12,7 @@
           </ul>
         </li>
         <li><b>Query:</b>
-          <ul>
+          <ul>- 
             <li v-for="(value, key) in $route.query"><b>{{key}}:</b> {{value}}</li>
           </ul>
         </li>

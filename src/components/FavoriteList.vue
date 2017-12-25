@@ -1,6 +1,6 @@
 <template>
   <div>
-
+    <f7-link href="/coin-detail/from/BTC/to/KRW/market/CCCAGG/">haha</f7-link>
     <f7-block-title>나의 관심코인</f7-block-title>
 
     <f7-list
@@ -12,15 +12,16 @@
       @sortable:close="onClose"
     >
       <f7-list-item
-        media-item
-        swipeout
         v-for="item in myFavorites"
+        media-item
+        :swipeout="false"
         :key="item.favId"
         :media="item.media"
         :title="item.title"
         :subtitle="item.subtitle"
         :text="item.text"
         :after="item.after"
+        :link="item.link"
         @swipeout:delete="onSwipeoutDelete(item.favId)"
         @swipeout:deleted="onSwipeoutDeleted(item.favId)"
       >
@@ -43,8 +44,7 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import _ from 'lodash'
-import { api } from '@/util/function'
-import { cryptocompare } from '@/util/const'
+import api from '@/api/cryptocompare'
 
 export default {
   data: _ => ({
@@ -55,7 +55,7 @@ export default {
 
   async created() {
     await this.getCoinMeta()
-    await this.getAllCoinData()
+    this.getAllCoinData()
     this.intervalId.push(setInterval(this.getAllCoinData, 1000 * 10))
   },
 
@@ -71,13 +71,7 @@ export default {
     },
 
     async getCoinMeta() {
-      this.coinMeta = await api.get(cryptocompare.coinList).
-        then(res => {
-          if (res.status === 200) {
-            return res.data
-          } else { throw new Error(res.message) }
-        }).
-        catch(e => console.error(e))
+      this.coinMeta = await api.getCoinList()
     },
 
     getAllCoinData() {
@@ -87,48 +81,33 @@ export default {
     },
 
     async getCoinData(favId=0, from='BTC', to='KRW', market='Bithumb') {
-      const url = `${cryptocompare.price}?fsym=${from}&tsyms=${to}&e=${market}`
-
-      const price = await api.get(url).
-        then(res => {
-          if (res.status === 200) {
-            return res.data[to]
-          } else { throw new Error(res.message) }
-        })
-
       const baseURl = this.coinMeta.BaseImageUrl
       const coinUrl = this.coinMeta.Data[from].ImageUrl
       const coinImg = baseURl + coinUrl
+      const coinInfo = {
+        favId,
+        from,
+        to,
+        market,
+        title: `${from} - ${market}`,
+        subtitle: `${Vue.options.filters.thousand(price)} ${to}`,
+        media: `<img src='${coinImg}' width='50'>`,
+        link: `/coin-detail/from/${from}/to/${to}/market/${market}`
+      }
 
-      const record = this.myFavorites.findIndex(p => !!(
-        p.from === from &&
-        p.to === to &&
-        p.market === market
+      let record = this.myFavorites.findIndex(p => !!(
+        p.favId === favId
       ))
 
       if (record >= 0) {
-        Vue.set(this.myFavorites, record, {
-          favId,
-          from,
-          to,
-          market,
-          price,
-          title: `${from} - ${market}`,
-          subtitle: `${Vue.options.filters.thousand(price)} ${to}`,
-          media: `<img src='${coinImg}' width='50'>`,
-        })
+        Vue.set(this.myFavorites, record, coinInfo)
       } else {
-        this.myFavorites.push({
-          favId,
-          from,
-          to,
-          market,
-          price,
-          title: `${from} - ${market}`,
-          subtitle: `${Vue.options.filters.thousand(price)} ${to}`,
-          media: `<img src='${coinImg}' width='50'>`,
-        })
+        record = this.myFavorites.push(coinInfo) - 1
       }
+
+      const price = await api.getCoinData(from, to, market)
+
+      Vue.set(this.myFavorites[record], 'subtitle', `${Vue.options.filters.thousand(price)} ${to}`)
     },
 
     onSwipeoutDelete(favId) {
@@ -154,7 +133,7 @@ export default {
 
   computed: {
     ...mapGetters([
-      'getFavorite',
+      'getFavorite', //getter of Vuex
     ])
   },
 

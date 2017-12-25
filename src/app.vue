@@ -237,6 +237,11 @@ export default {
   props: {},
 
   mounted() {
+    //this.$setItem('myName','ChoiJH')
+    //.then(res => { console.log(res) })
+    
+    this.$getItem('myName')
+    .then(res => console.log('get', res))
   },
 
   destroyed() {
