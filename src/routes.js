@@ -12,7 +12,11 @@ export default [
     component: require('./pages/dynamic-route.vue')
   },
   {
-    path: '/coin-detail/from/:from/to/:to:/market/:market',
+    path: '/coin-detail/:from/:to/:market/',
     component: require('./pages/CoinDetailPage.vue')
+  },
+  {
+    path: '/test/',
+    component: require('./pages/AddNewFav.vue')
   }
 ]

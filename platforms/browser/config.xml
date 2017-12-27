@@ -2,11 +2,11 @@
 <widget id="kr.devjiro.bitcord" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>BITCORD</name>
     <description>
-        bitcord
-    </description>
+    bitcord
+  </description>
     <author email="bitcord.kr@gmail.com" href="http://bitcord.kr">
-        bitcord
-    </author>
+    bitcord
+  </author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />

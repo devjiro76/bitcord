@@ -25,7 +25,8 @@ export default new Vuex.Store({
       from: 'ETH',
       to: 'USD',
       market: 'CCCAGG'
-    }]
+    }],
+    coinMeta: null,
   },
   mutations,
   actions,

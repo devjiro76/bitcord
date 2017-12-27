@@ -1,8 +1,10 @@
 import axios from 'axios'
+import moment from 'moment'
 
 const url = {
   coinList: 'https://min-api.cryptocompare.com/data/all/coinlist',
   price: 'https://min-api.cryptocompare.com/data/price',
+  priceHisorical: 'https://min-api.cryptocompare.com/data/pricehistorical',
   historical: {
     minute: 'https://min-api.cryptocompare.com/data/histominute',
     hour: 'https://min-api.cryptocompare.com/data/histohour',
@@ -27,7 +29,7 @@ const get = (url) => {
     .catch(e => { throw e })
 }
 
-const getCoinList = _ => {
+const coinList = _ => {
   return get(url.coinList).
     then(res => {
       if (res.status === 200 && res.data.Response === 'Success') {
@@ -36,7 +38,7 @@ const getCoinList = _ => {
     })
 }
 
-const getCoinData = (from, to, market) => {
+const coinCurrent = (from, to, market) => {
   return get(`${url.price}?fsym=${from}&tsyms=${to}&e=${market}`).
     then(res => {
       if (res.status === 200 && res.data[to]) {
@@ -45,7 +47,22 @@ const getCoinData = (from, to, market) => {
     })
 }
 
+const coinPriceHitorical = (from, to, market, ts) => {
+  return get(`${url.priceHisorical}?fsym=${from}&tsyms=${to}&e=${market}&ts=${ts}`).
+    then(res => {
+      if (res.status === 200 && res.data[from]) {
+        return res.data[from][to]
+      } else { throw new Error(res.message) }
+    })
+}
+
+const coinYesterday = (from, to, market) => {
+  const ts = moment().add(-1, 'days')
+  return coinPriceHitorical(from, to, market, ts)
+}
+
 export default {
-  getCoinList,
-  getCoinData,
+  coinList,
+  coinCurrent,
+  coinYesterday,
 }

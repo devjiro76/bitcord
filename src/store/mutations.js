@@ -1,5 +1,9 @@
 import _ from 'lodash'
 
+export const get_coinMeta = async (state, item) => {
+  state.coinMeta = item
+}
+
 export const add_favorite = (state, item) => {
   const record = state.favorites.find(p => (
     p.from === item.from &&

@@ -1,7 +1,9 @@
 <template>
   <f7-page>
     <f7-navbar title="종목상세" back-link="뒤로" sliding></f7-navbar>
-    <f7-block-title></f7-block-title>
+    <f7-block-title>
+      {{ $route.params.from }} - {{ $route.params.to }}
+    </f7-block-title>
     <f7-block>
       <div id="test"></div>
     </f7-block>
@@ -22,19 +24,28 @@
 <script>
 import './tv.js'
 
+const symbolsPool = {
+  BTCKRW: 'XCOIN:BTCKRW',
+  ETHKRW: 'KORBIT:ETHKRW',
+  ETHUSD: 'COINBASE:ETHUSD',
+}
+
 export default {
   data: _ => ({
   }),
   mounted() {
-    //console.log($route)
-    console.log('detail page')
-    console.log(TradingView)
+    const fromTo = `${this.$route.params.from}${this.$route.params.to}` 
+
+    console.log('fromTo:', fromTo)
+    const symbol = symbolsPool[fromTo]
+
+    console.log('symbol:', symbol)
 
     new TradingView.widget({
       "container_id": 'test',
       "autosize": true,
-      "symbol": "XCOIN:BTCKRW",
-      "interval": "1",
+      "symbol": `${symbol}`,
+      "interval": "1D",
       "timezone": "Etc/UTC",
       "theme": "Light",
       "style": "1",

@@ -63,7 +63,7 @@
           <f7-nav-left>
             <f7-link icon="icon-bars" open-panel="left"></f7-link>
           </f7-nav-left>
-          <f7-nav-center sliding>Framework7</f7-nav-center>
+          <f7-nav-center sliding>비트코드</f7-nav-center>
           <f7-nav-right>
             <f7-link icon="icon-bars" open-panel="right"></f7-link>
           </f7-nav-right>
@@ -76,13 +76,24 @@
               <f7-nav-left>
                 <f7-link icon="icon-bars" open-panel="left"></f7-link>
               </f7-nav-left>
-              <f7-nav-center sliding>Framework7</f7-nav-center>
+              <f7-nav-center sliding>비트코드</f7-nav-center>
               <f7-nav-right>
                 <f7-link icon="icon-bars" open-panel="right"></f7-link>
               </f7-nav-right>
             </f7-navbar>
+
             <!-- Page Content -->
-            <f7-block-title>Welcome to my App</f7-block-title>
+            <f7-block-title>비트코드</f7-block-title>
+            <f7-block inner>
+              <p>비트코드는 다양한 해외 API를 통해 수집된 정보로 가장 빠르고 정확한 정보를 실시간으로 제공합니다. 직관적인 현재 가격을 다양한 환율로 제공하고, 트레이딩 뷰를 통해 깊이있는 차트를 이용할 수 있습니다.</p>
+            </f7-block>
+
+            <div>
+              <FavoriteList></FavoriteList>
+              <f7-button @click="addFavorite1">상품추가 테스트1</f7-button>
+              <f7-button @click="addFavorite2">상품추가 테스트2</f7-button>
+            </div>
+
 
             <f7-block inner>
               <!--VueC3 :handler="handler"></VueC3-->
@@ -97,11 +108,6 @@
             </f7-block>
 
 
-            <div>
-              <FavoriteList></FavoriteList>
-              <f7-button @click="addFavorite1">haha</f7-button>
-              <f7-button @click="addFavorite2">haha</f7-button>
-            </div>
 
             <f7-block inner>
               <p>Duis sed erat ac eros ultrices pharetra id ut tellus. Praesent rhoncus enim ornare ipsum aliquet ultricies. Pellentesque sodales erat quis elementum sagittis.</p>
