@@ -140,6 +140,12 @@
                 </f7-col>
               </f7-grid>
             </f7-block>
+
+            <f7-toolbar tabbar>
+              <f7-link tab-link="#tab1">Tab 1</f7-link>
+              <f7-link tab-link="#tab2">Tab 2</f7-link>
+            </f7-toolbar>
+            
           </f7-page>
         </f7-pages>
       </f7-view>
