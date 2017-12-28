@@ -1,7 +1,7 @@
 import _ from 'lodash'
 
-export const get_coinMeta = async (state, item) => {
-  state.coinMeta = item
+export const set_coinMetaLoaded = (state, flag) => {
+  state.coinMetaLoaded = flag
 }
 
 export const add_favorite = (state, item) => {

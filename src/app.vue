@@ -142,10 +142,10 @@
             </f7-block>
 
             <f7-toolbar tabbar>
-              <f7-link tab-link="#tab1">Tab 1</f7-link>
-              <f7-link tab-link="#tab2">Tab 2</f7-link>
+              <f7-link tab-link="#tab1">홈</f7-link>
+              <f7-link tab-link="#tab2">내 코인</f7-link>
             </f7-toolbar>
-            
+
           </f7-page>
         </f7-pages>
       </f7-view>
@@ -202,13 +202,16 @@ import Vue from 'vue'
 import _ from 'lodash'
 
 import FavoriteList from '@/components/FavoriteList'
-
-import { api } from '@/util/function'
+import api from '@/api/cryptocompare'
 import '@/css/chartist.min.css'
 
 export default {
-  data: () => ({
+  async beforeCreate() {
+    Vue.$coinMeta = await api.coinList()
+    this.$store.dispatch('set_coinMetaLoaded', true)
+  },
 
+  data: () => ({
     chart: {
       ratio: 'ct-minor-seventh',
       type: 'Line',
@@ -249,6 +252,7 @@ export default {
   props: {},
 
   mounted() {
+    //console.log('$meta', Vue.$coinMeta)
     //this.$setItem('myName','ChoiJH')
     //.then(res => { console.log(res) })
     
@@ -298,9 +302,9 @@ export default {
         }
       }
 
-      await api.get(apiServer.bitcoin.url)
-      .then((res) => (convertXY(apiServer.bitcoin.url, res.data)))
-      .then(chartData => { this.chart.data = chartData })
+      //await api.get(apiServer.bitcoin.url)
+      //.then((res) => (convertXY(apiServer.bitcoin.url, res.data)))
+      //.then(chartData => { this.chart.data = chartData })
     },
   },
 
@@ -311,28 +315,4 @@ export default {
 </script>
 
 <style>
-
-/* Default Status bar background */
-.statusbar-overlay {
-    background: pink;
-    /* We can add transition for smooth color animation */
-    -webkit-transition: 400ms;
-    transition: 400ms;
-}
-
-/* Change Status bar background when panel opened */
-body.with-panel-left-cover .statusbar-overlay {
-    background: #222;
-}
-
-.empty {
-    border-radius: 10px;
-    text-align: center;
-    text-shadow: 2px 2px black;
-    line-height: 450px;
-    background: gray;
-    color: white;
-    font-weight: bold;
-    font-size: 40px;
-}
 </style>

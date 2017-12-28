@@ -1,5 +1,5 @@
-export const coinMeta = state => {
-  return state.coinMeta
+export const coinMetaLoaded = state => {
+  return state.coinMetaLoaded
 }
 
 export const favorites = state => {

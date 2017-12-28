@@ -38,6 +38,7 @@
           fill
           big
           color="red"
+          :disabled="!coinMetaLoaded"
         >관심코인 추가하기</f7-button>
       </f7-list-label>
     </f7-list>
@@ -57,10 +58,6 @@ export default {
     myFavorites: [],
   }),
 
-  created() {
-    this.getCoinMeta()
-  },
-
   destroyed() {
     this.clearAllIntervals()
   },
@@ -70,10 +67,6 @@ export default {
       this.intervalId.forEach(id => {
         clearInterval(id);
       })
-    },
-
-    getCoinMeta() {
-      this.$store.dispatch('get_coinMeta')
     },
 
     triggerGetAllCoinData() {
@@ -88,8 +81,8 @@ export default {
     },
 
     async getCoinData(favId=0, from='BTC', to='KRW', market='Bithumb') {
-      const baseURl = this.coinMeta.BaseImageUrl
-      const coinUrl = this.coinMeta.Data[from].ImageUrl
+      const baseURl = Vue.$coinMeta.BaseImageUrl
+      const coinUrl = Vue.$coinMeta.Data[from].ImageUrl
       const coinImg = baseURl + coinUrl
       const coinInfo = {
         favId,
@@ -143,9 +136,9 @@ export default {
 
   computed: {
     ...mapGetters([
-      'coinMeta',
       'favorites',
-    ])
+      'coinMetaLoaded'
+    ]),
   },
 
   watch: {
@@ -154,8 +147,7 @@ export default {
       this.getAllCoinData()
     },
 
-    coinMeta: function() {
-      console.log('coinMeta!!!')
+    coinMetaLoaded: function() {
       this.triggerGetAllCoinData()
     }
   },

@@ -1,8 +1,7 @@
 import api from '@/api/cryptocompare'
 
-export const get_coinMeta = async (context) => {
-  const item = await api.coinList()
-  context.commit('get_coinMeta', item)
+export const set_coinMetaLoaded = (context, flag) => {
+  context.commit('set_coinMetaLoaded', flag)
 }
 
 export const add_favorite = (context, item) => {
