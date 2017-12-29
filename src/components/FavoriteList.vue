@@ -64,7 +64,7 @@ export default {
 
   methods: {
     clearAllIntervals() {
-      this.intervalId.forEach(id => {
+      this.intervalId.map(id => {
         clearInterval(id);
       })
     },
@@ -75,7 +75,7 @@ export default {
     },
 
     getAllCoinData() {
-      this.favorites.forEach(item => {
+      _.map(this.favorites, item => {
         this.getCoinData(item.favId, item.from, item.to, item.market)
       })
     },

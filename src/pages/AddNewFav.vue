@@ -51,11 +51,7 @@ export default {
   }),
   methods: {
     addFavor(itemId) {
-      console.log(itemId)
-      
       const coin = _.find(Vue.$coinMeta.Data, { Id: itemId })
-      console.log(coin)
-
       this.$store.dispatch('add_favorite', {
         favId: itemId,
         from: coin.Name,

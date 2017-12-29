@@ -5,21 +5,16 @@ export const set_coinMetaLoaded = (state, flag) => {
 }
 
 export const add_favorite = (state, item) => {
-  const record = state.favorites.find(p => (
-    p.from === item.from &&
-    p.to === item.to &&
-    p.market === item.market
-  ))
+  const key = item.favId
+  console.log(_.assign(state.favorites, {
+    [key]: item
+  }))
 
-  if (!record) {
-    state.favorites.push(item)
-  } else {
-    return false
-  }
+  state.favorites[key] = item
 }
 
 export const remove_favorite = (state, favId) => {
-  console.log('store dlete:', favId)
+  console.log('store delete:', favId)
   _.remove(state.favorites, p => (
     p.favId === favId
   ))
