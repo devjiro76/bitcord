@@ -2,8 +2,6 @@ import Vue from 'vue'
 import Framework7 from 'framework7'
 import Framework7Vue from 'framework7-vue'
 import chartist from 'vue-chartist'
-import VuelocalForage from 'vue-localforage'
-import VuejsStorage from 'vuejs-storage'
 //import Vuetify from 'vuetify'
 
 import Routes from './routes.js'
@@ -25,8 +23,6 @@ Vue.use(chartist, {
     messageNoData: "You have not enough data",
     classNoData: "empty"
 })
-Vue.use(VuelocalForage)
-Vue.use(VuejsStorage)
 //Vue.use(Vuetify)
 
 Vue.filter('thousand', thousand)

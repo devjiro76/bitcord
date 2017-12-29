@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import VuelocalForage from 'vue-localforage'
-import VuejsStorage from 'vuejs-storage'
 import * as mutations from './mutations'
 import * as actions from './actions'
 import * as getters from './getters'
@@ -33,11 +31,5 @@ export default new Vuex.Store({
   mutations,
   actions,
   getters,
-  //plugins: [
-  //  VuejsStorage({
-  //    namespace: 'my-namespace',
-  //    storage: VuelocalForage
-  //  })
-  //],
   strict: debug,
 })
