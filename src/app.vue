@@ -209,6 +209,7 @@ export default {
   async beforeCreate() {
     Vue.$coinMeta = await api.coinList()
     this.$store.dispatch('set_coinMetaLoaded', true)
+    this.$store.dispatch('init_favorites')
   },
 
   data: () => ({
