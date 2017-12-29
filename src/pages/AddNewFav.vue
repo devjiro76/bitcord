@@ -9,7 +9,7 @@
       </f7-list-item>
     </f7-list>
     <div>
-      <f7-card  
+      <f7-card
         v-for="item in searchedCoins || pagedCoins"
         :key="item.Id"
         :title="item.Name"
@@ -53,10 +53,11 @@ export default {
     addFavor(itemId) {
       const coin = _.find(Vue.$coinMeta.Data, { Id: itemId })
       this.$store.dispatch('add_favorite', {
-        favId: itemId,
-        from: coin.Name,
-        to: 'USD',
-        market: 'CCCAGG'
+        [itemId]: {
+          from: coin.Name,
+          to: 'USD',
+          market: 'CCCAGG'
+        }
       })
     }
   },

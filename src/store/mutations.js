@@ -1,22 +1,12 @@
 import _ from 'lodash'
-import localforage from 'localforage'
-
-export const init_favorites = (state) => {
-  localforage.getItem('favorites')
-    .then(oldVal => {
-      state.favorites = oldVal
-    })
-}
 
 export const set_coinMetaLoaded = (state, flag) => {
   state.coinMetaLoaded = flag
 }
 
-export const add_favorite = (state, item) => {
-  const key = item.favId
-  _.assign(state.favorites, {
-    [key]: item
-  })
+export const set_favorites = (state, item) => {
+  console.log('mutation, ', item)
+  state.favorites = item
 }
 
 export const remove_favorite = (state, favId) => {

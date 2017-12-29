@@ -11,18 +11,18 @@
       @sortable:close="onClose"
     >
       <f7-list-item
-        v-for="item in myFavorites"
+        v-for="(item, key) in myFavorites"
         media-item
         :swipeout="false"
-        :key="item.favId"
+        :key="key"
         :media="item.media"
         :title="item.title"
         :subtitle="item.subtitle"
         :text="item.text"
         :after="item.after"
         :link="item.link"
-        @swipeout:delete="onSwipeoutDelete(item.favId)"
-        @swipeout:deleted="onSwipeoutDeleted(item.favId)"
+        @swipeout:delete="onSwipeoutDelete(key)"
+        @swipeout:deleted="onSwipeoutDeleted(key)"
       >
         <!--f7-swipeout-actions>
           <f7-swipeout-button delete>삭제</f7-swipeout-button>
@@ -37,9 +37,17 @@
           rasied
           fill
           big
-          color="red"
+          color="blue"
           :disabled="!coinMetaLoaded"
         >관심코인 추가하기</f7-button>
+        <f7-button
+          @click="removeAllFavorites"
+          round
+          rasied
+          fill
+          big
+          color="red"
+        >관심코인 삭제하기</f7-button>
       </f7-list-label>
     </f7-list>
 
@@ -55,7 +63,7 @@ import api from '@/api/cryptocompare'
 export default {
   data: _ => ({
     intervalId: [],
-    myFavorites: [],
+    myFavorites: {},
   }),
 
   destroyed() {
@@ -71,54 +79,61 @@ export default {
 
     triggerGetAllCoinData() {
       this.getAllCoinData()
-      this.intervalId.push(setInterval(this.getAllCoinData, 1000 * 10))
+      this.intervalId.push(setInterval(this.getAllCoinData, 500 * 10))
     },
 
     getAllCoinData() {
-      _.map(this.favorites, item => {
-        this.getCoinData(item.favId, item.from, item.to, item.market)
+      /*
+      _.map(this.myFavorites, (coin, coinId) => {
+        const record = _.pick(this.favorites, coinId)
+        if (_.isEmpty(record)) {
+          const omitted = _.omit(this.myFavorites, coinId)
+          Vue.set(this.myFavorites, omitted)
+        }
+      })
+      */
+
+      _.map(this.favorites, (coin, coinId) => {
+        this.getCoinData(coin, coinId)
       })
     },
 
-    async getCoinData(favId=0, from='BTC', to='KRW', market='Bithumb') {
-      const baseURl = Vue.$coinMeta.BaseImageUrl
-      const coinUrl = Vue.$coinMeta.Data[from].ImageUrl
-      const coinImg = baseURl + coinUrl
-      const coinInfo = {
-        favId,
-        from,
-        to,
-        market,
-        text: `${from} - ${market}`,
-        media: `<img src='${coinImg}' width='50'>`,
-        link: `/coin-detail/${from}/${to}/${market}`
-      }
+    async getCoinData({from, to, market}, coinId) {
+      console.log("---getCoinData---")
+      const record = _.find(this.myFavorites, {from, to, market})
 
-      let record = this.myFavorites.findIndex(p => !!(
-        p.favId === favId
-      ))
+      if (!record) {
+        const baseURl = Vue.$coinMeta.BaseImageUrl
+        const coinUrl = Vue.$coinMeta.Data[from].ImageUrl
+        const coinImg = baseURl + coinUrl
 
-      if (record >= 0) {
-        const mergedInfo = _.assign(this.myFavorites[record], coinInfo)
-        Vue.set(this.myFavorites, record, mergedInfo)
-      } else {
-        record = this.myFavorites.push(coinInfo) - 1
+        Vue.set(this.myFavorites, coinId, {
+          from,
+          to,
+          market,
+          text: `${from} - ${market}`,
+          media: `<img src='${coinImg}' width='50'>`,
+          link: `/coin-detail/${from}/${to}/${market}`
+        })
       }
 
       const price = await api.coinCurrent(from, to, market)
-      Vue.set(this.myFavorites[record], 'title', `${Vue.options.filters.thousand(price)} ${to}`)
+      console.log('price', price)
+      Vue.set(this.myFavorites[coinId], 'title', `${Vue.options.filters.thousand(price)} ${to}`)
 
       const yPrice = await api.coinYesterday(from, to, market)
-      Vue.set(this.myFavorites[record], 'subtitle', `${Vue.options.filters.thousand(yPrice)} ${to}`)
+      Vue.set(this.myFavorites[coinId], 'subtitle', `${Vue.options.filters.thousand(yPrice)} ${to}`)
     },
 
-    onSwipeoutDelete(favId) {
-      console.log('local delte :', favId)
+    removeAllFavorites() {
+      this.$store.dispatch('remove_all_favorites')
+    },
+
+    onSwipeoutDelete(coinId) {
       _.remove(this.myFavorites, p => (
-        p.favId === favId
+        p.coinId === coinId
       ))
-      this.$store.dispatch('remove_favorite', favId)
-      console.log('local after delte :', this.myFavorites)
+      this.$store.dispatch('remove_favorite', coinId)
     },
     onSwipeoutDeleted() {
     },
@@ -143,7 +158,6 @@ export default {
 
   watch: {
     favorites: function () {
-      console.log('somethign changed!')
       this.getAllCoinData()
     },
 
