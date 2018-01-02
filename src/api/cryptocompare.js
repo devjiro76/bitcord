@@ -61,10 +61,9 @@ const coinYesterday = (from, to, market) => {
   return coinPriceHitorical(from, to, market, ts)
 }
 
-const coinHistorical = (period = 'minute', from, to, market, limit = 100) => {
+const coinHistorical = (period = 'minute', from, to, market, limit = 60) => {
   return get(`${url.historical[period]}?fsym=${from}&tsym=${to}&e=${market}&limit=${limit}`).
   then(res => {
-    console.log(res)
     if (res.data.Response === 'Success') {
       return res.data.Data
     } else { throw new Error(res.message) }
