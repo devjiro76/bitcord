@@ -1,6 +1,26 @@
 <template>
   <f7-page>
-    <chart :options="options"></chart>
+    <f7-navbar title="차트" back-link="뒤로" sliding></f7-navbar>
+
+    <f7-block>
+      <f7-buttons>
+        <f7-button
+          fill
+        >Button 1</f7-button>
+        <f7-button
+          
+        >Button 2</f7-button>
+        <f7-button
+          
+        >Button 3</f7-button>
+      </f7-buttons>
+    </f7-block>
+
+    <chart
+      :options="options"
+      auto-resize
+      width="100%"
+    ></chart>
   </f7-page>
 </template>
 
@@ -69,6 +89,7 @@ export default {
     options: function() {
       return {
         backgroundColor: '#21202D',
+        //backgroundColor: '#fff',
         legend: {
           data: ['BTC', 'MA5', 'MA10', 'MA20', 'MA30'],
           inactiveColor: '#777',
@@ -146,14 +167,14 @@ export default {
         //},
         grid: [
           {
-            left: '15%',
+            left: '80px',
             right: '8%',
-            height: '50%'
+            height: '50%',
           },
           {
-            left: '15%',
+            left: '80px',
             right: '8%',
-            top: '63%',
+            top: '73%',
             height: '16%'
           }
         ],
@@ -258,3 +279,10 @@ export default {
   }
 }
 </script>
+
+<style>
+.echarts {
+  width: 100vw;
+  min-width: 400px;
+}
+</style>

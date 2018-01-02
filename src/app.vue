@@ -90,24 +90,11 @@
 
             <div>
               <FavoriteList></FavoriteList>
+              <!--
               <f7-button @click="addFavorite1">상품추가 테스트1</f7-button>
               <f7-button @click="addFavorite2">상품추가 테스트2</f7-button>
+              -->
             </div>
-
-
-            <f7-block inner>
-              <!--VueC3 :handler="handler"></VueC3-->
-              <chartist
-                id-chart="ct-chart"
-                :ratio="chart.ratio"
-                :type="chart.type"
-                :data="chart.data"
-                :options="chart.options"
-                :event-handlers="chart.eventHandlers"
-              ></chartist>
-            </f7-block>
-
-
 
             <f7-block inner>
               <p>Duis sed erat ac eros ultrices pharetra id ut tellus. Praesent rhoncus enim ornare ipsum aliquet ultricies. Pellentesque sodales erat quis elementum sagittis.</p>
@@ -213,41 +200,7 @@ export default {
   },
 
   data: () => ({
-    chart: {
-      ratio: 'ct-minor-seventh',
-      type: 'Line',
-      data: {
-        labels: ["A", "B", "C"],
-        series:[[1, 3, 2]]
-      },
-      options: {
-        axisX: {
-          scaleMinSpace: 120,
-          //labelInterpolationFnc: function(value) {
-          //  return unix2date(value, "MM-DD")
-          //},
-          //labelInterpolationFnc: function(value, index) {
-          //  return index % 2 === 0 ? unix2date(value, "MM-DD") : null;
-          //},
-        },
-        axisY: {
-          offset: 60,
-          onlyInteger: true,
-          //labelInterpolationFnc: function(value) {
-          //  return Vue.options.filters.thousand(value)
-          //},
-          scaleMinSpace: 15,
-        }
-      },
-      eventHandlers: [{
-        event: 'draw',
-        fn: (context) => {
-          context.element.attr({
-            style: `stroke: hsl(${Math.floor(Vue.chartist.getMultiValue(context.value) / 100 * 100)}, 60%, 50%);`
-          })
-        }
-      }],
-    },
+   
   }),
 
   props: {},
@@ -277,30 +230,6 @@ export default {
         to: 'USD',
         market: 'CCCAGG'
       })
-    },
-
-    async drawChart () {
-      const convertXY = (url, data) => {
-        const server = _.findKey(apiServer, {url: url})
-        switch (server) {
-          case 'bitcoin':
-            //return data.values
-            return {
-              labels: _.takeRight(_.map(data.values, 'x'), 20),
-              series: [ _.takeRight(_.map(data.values, 'y'), 20) ],
-            }
-            break;
-          case 'coindesk_realtime':
-          case 'coindesk_history':
-            break;
-          default:
-            break;
-        }
-      }
-
-      //await api.get(apiServer.bitcoin.url)
-      //.then((res) => (convertXY(apiServer.bitcoin.url, res.data)))
-      //.then(chartData => { this.chart.data = chartData })
     },
   },
 

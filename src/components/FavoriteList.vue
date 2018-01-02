@@ -103,6 +103,7 @@ export default {
       const record = _.find(this.myFavorites, {from, to, market})
 
       if (!record) {
+        const coinName = Vue.$coinMeta.Data[from].FullName
         const baseURl = Vue.$coinMeta.BaseImageUrl
         const coinUrl = Vue.$coinMeta.Data[from].ImageUrl
         const coinImg = baseURl + coinUrl
@@ -111,7 +112,7 @@ export default {
           from,
           to,
           market,
-          title: `${from} - ${market}`,
+          title: `${coinName} - ${market}`,
           media: `<img src='${coinImg}' width='50'>`,
           link: `/coin-detail/${from}/${to}/${market}`
         })
