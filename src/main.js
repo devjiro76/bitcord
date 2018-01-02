@@ -2,6 +2,12 @@ import Vue from 'vue'
 import Framework7 from 'framework7'
 import Framework7Vue from 'framework7-vue'
 import chartist from 'vue-chartist'
+import echarts from 'echarts'
+import ECharts from 'vue-echarts/components/ECharts'
+// import ECharts modules manually to reduce bundle size
+//import 'echarts/lib/chart/bar'
+//import 'echarts/lib/component/tooltip'
+
 //import Vuetify from 'vuetify'
 
 import Routes from './routes.js'
@@ -24,6 +30,7 @@ Vue.use(chartist, {
     classNoData: "empty"
 })
 //Vue.use(Vuetify)
+Vue.component('chart', ECharts)
 
 Vue.filter('thousand', thousand)
 Vue.filter('unix2date', unix2date)

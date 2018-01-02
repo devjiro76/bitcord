@@ -9,8 +9,8 @@
       </f7-list-item>
     </f7-list>
     <div>
-      <f7-card  
-        v-for="item in searchedCoins || pagedCoins"
+      <f7-card
+        v-for="item in searchedCoins || filteredCoins"
         :key="item.Id"
         :title="item.Name"
         color="blue-grey darken-2"
@@ -53,10 +53,11 @@ export default {
     addFavor(itemId) {
       const coin = _.find(Vue.$coinMeta.Data, { Id: itemId })
       this.$store.dispatch('add_favorite', {
-        favId: itemId,
-        from: coin.Name,
-        to: 'USD',
-        market: 'CCCAGG'
+        [itemId]: {
+          from: coin.Name,
+          to: 'KRW',
+          market: 'Bithumb'
+        }
       })
     }
   },
@@ -64,10 +65,10 @@ export default {
     ...mapGetters([
       'coinMeta',
     ]),
-    pagedCoins() {
-      const sample =  _.sampleSize(Vue.$coinMeta.Data, 100)
-      console.log(sample)
-      return sample
+    filteredCoins() {
+      console.log('sample', _.sampleSize(Vue.$coinMeta.Data, 1))
+      const overZero = _.filter(Vue.$coinMeta.Data, coin => coin.TotalCoinSupply > 0)
+      return overZero
     },
     searchedCoins() {
       if (!this.searchKeyword || !this.searchKeyword.length) return false

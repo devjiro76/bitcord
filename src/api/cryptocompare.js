@@ -61,8 +61,18 @@ const coinYesterday = (from, to, market) => {
   return coinPriceHitorical(from, to, market, ts)
 }
 
+const coinHistoricalMinute = (from, to, market, limit = 100) => {
+  return get(`${url.historical.minute}?fsym=${from}&tsym=${to}&e=${market}&limit=${limit}`).
+  then(res => {
+    if (res.data.Response === 'Success') {
+      return res.data.Data
+    } else { throw new Error(res.message) }
+  })
+}
+
 export default {
   coinList,
   coinCurrent,
   coinYesterday,
+  coinHistoricalMinute
 }
