@@ -5,14 +5,19 @@
     <f7-block>
       <f7-buttons>
         <f7-button
-          fill
-        >Button 1</f7-button>
+          :fill="period==='minute' ? true: false"
+          @click="period='minute'"
+        >분 단위</f7-button>
+
         <f7-button
-          
-        >Button 2</f7-button>
+          :fill="period==='hour' ? true: false"
+          @click="period='hour'"
+        >시간 단위</f7-button>
+
         <f7-button
-          
-        >Button 3</f7-button>
+          @click="period='day'"
+          :fill="period==='day' ? true: false"
+        >일 단위</f7-button>
       </f7-buttons>
     </f7-block>
 
@@ -37,31 +42,43 @@ import 'echarts'
 var upColor = '#00da3c';
 var downColor = '#ec0000';
 
-function calculateMA(dayCount, data) {
-    var result = [];
-    for (var i = 0, len = data.length; i < len; i++) {
-        if (i < dayCount) {
-            result.push('-');
-            continue;
-        }
-        var sum = 0;
-        for (var j = 0; j < dayCount; j++) {
-            sum += data[i - j][1];
-        }
-        result.push(sum / dayCount);
-    }
-    return result;
-}
-
 export default {
   data: _ => ({
+    period: 'minute',
     rawData: null,
   }),
 
   async beforeCreate() {
-    const res = await api.coinHistoricalMinute('BTC', 'KRW', 'Bithumb')
-    console.log('res', res)
+    const {from, to, market} = this.$route.params
+    const res = await api.coinHistorical('minute', from, to, market)
     this.rawData = res
+  },
+
+  watch: {
+    period: async function() {
+      console.log('peroid changed!', this.period)
+      const {from, to, market} = this.$route.params
+      const res = await api.coinHistorical(this.period, from, to, market)
+      this.rawData = res
+    }
+  },
+
+  methods: {
+    calculateMA: function(dayCount, data) {
+      var result = [];
+      for (var i = 0, len = data.length; i < len; i++) {
+          if (i < dayCount) {
+              result.push('-');
+              continue;
+          }
+          var sum = 0;
+          for (var j = 0; j < dayCount; j++) {
+              sum += data[i - j][1];
+          }
+          result.push(sum / dayCount);
+      }
+      return result;
+    },
   },
 
   computed: {
@@ -72,17 +89,27 @@ export default {
     },
 
     volumes: function () {
-      const a = _.map(this.rawData, function (item) {
+      return _.map(this.rawData, function (item) {
         return item.volumeto - item.volumefrom
       })
-
-      console.log('a', a)
-      return a 
     },
 
     dates: function() {
-     return _.map(this.rawData, function (item) {
-        return Vue.options.filters.unix2date(item.time, "HH:mm")
+      let format
+      switch(this.period) {
+        case 'minute':
+        case 'hour':
+          format = 'HH:mm'
+          break;
+
+        case 'day':
+        default:
+          format = 'MM-DD'
+          break;
+      }
+
+      return _.map(this.rawData, function (item) {
+        return Vue.options.filters.unix2date(item.time, format)
       })
     },
 
@@ -221,7 +248,7 @@ export default {
           {
             name: 'MA5',
             type: 'line',
-            data: calculateMA(5, this.data),
+            data: this.calculateMA(5, this.data),
             smooth: true,
             showSymbol: false,
             lineStyle: {
@@ -233,7 +260,7 @@ export default {
           {
             name: 'MA10',
             type: 'line',
-            data: calculateMA(10, this.data),
+            data: this.calculateMA(10, this.data),
             smooth: true,
             showSymbol: false,
             lineStyle: {
@@ -245,7 +272,7 @@ export default {
           {
             name: 'MA20',
             type: 'line',
-            data: calculateMA(20, this.data),
+            data: this.calculateMA(20, this.data),
             smooth: true,
             showSymbol: false,
             lineStyle: {
@@ -257,7 +284,7 @@ export default {
           {
             name: 'MA30',
             type: 'line',
-            data: calculateMA(30, this.data),
+            data: this.calculateMA(30, this.data),
             smooth: true,
             showSymbol: false,
             lineStyle: {

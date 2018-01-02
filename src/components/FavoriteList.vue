@@ -83,16 +83,6 @@ export default {
     },
 
     getAllCoinData() {
-      /*
-      _.map(this.myFavorites, (coin, coinId) => {
-        const record = _.pick(this.favorites, coinId)
-        if (_.isEmpty(record)) {
-          const omitted = _.omit(this.myFavorites, coinId)
-          Vue.set(this.myFavorites, omitted)
-        }
-      })
-      */
-
       _.map(this.favorites, (coin, coinId) => {
         this.getCoinData(coin, coinId)
       })
