@@ -13,10 +13,15 @@ export const set_coinMetaLoaded = (state, flag) => {
 }
 
 export const add_favorite = (state, item) => {
-  const key = item.favId
-  _.assign(state.favorites, {
-    [key]: item
-  })
+  this.state.favorites = item
+  //const key = item.favId
+  //_.assign(state.favorites, {
+  //  [key]: item
+  //})
+}
+
+export const remove_all_favorites = (state) => {
+  state.favorites = {}
 }
 
 export const remove_favorite = (state, favId) => {

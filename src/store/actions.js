@@ -9,17 +9,25 @@ export const set_coinMetaLoaded = (context, flag) => {
   context.commit('set_coinMetaLoaded', flag)
 }
 
-export const add_favorite = (context, item) => {
-  localforag_save_favorite(item)
-  context.commit('add_favorite', item)
+export const add_favorite = async (context, item) => {
+  const newVal = await localforage_add_favorite(item)
+  context.commit('add_favorite', newVal)
+}
+
+export const remove_all_favorites = (context) => {
+  localforage_remove_all_favorites()
+  context.commit('remove_all_favorites')
 }
 
 export const remove_favorite = (context, item) => {
   context.commit('remove_favorite', item)
 }
 
+const localforage_remove_all_favorites = _ => {
+  localforage.clear()
+}
 
-const localforag_save_favorite = (item) => {
+const localforage_add_favorite = (item) => {
   localforage.getItem('favorites')
   .then(oldVal => {
     const key = item.favId
@@ -27,6 +35,8 @@ const localforag_save_favorite = (item) => {
       [key]: item
     })
     localforage.setItem('favorites', newVal)
-    .then(res=> {console.log('for', res)})
+    .then(res => {
+      return res
+    })
   })
 }

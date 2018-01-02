@@ -37,9 +37,17 @@
           rasied
           fill
           big
-          color="red"
+          color="blue"
           :disabled="!coinMetaLoaded"
         >관심코인 추가하기</f7-button>
+        <f7-button
+          @click="removeAllFavorites"
+          round
+          rasied
+          fill
+          big
+          color="red"
+        >관심코인 모두삭제</f7-button>
       </f7-list-label>
     </f7-list>
 
@@ -110,6 +118,10 @@ export default {
 
       const yPrice = await api.coinYesterday(from, to, market)
       Vue.set(this.myFavorites[record], 'subtitle', `${Vue.options.filters.thousand(yPrice)} ${to}`)
+    },
+
+    removeAllFavorites() {
+      this.$store.dispatch('remove_all_favorites')
     },
 
     onSwipeoutDelete(favId) {
