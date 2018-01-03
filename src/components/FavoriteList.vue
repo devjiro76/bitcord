@@ -66,6 +66,11 @@ export default {
     myFavorites: {},
   }),
 
+  mounted() {
+    this.getAllCoinData()
+    this.intervalId.push(setInterval(this.getAllCoinData, 500 * 10))
+  },
+
   destroyed() {
     this.clearAllIntervals()
   },
@@ -77,43 +82,32 @@ export default {
       })
     },
 
-    triggerGetAllCoinData() {
-      this.getAllCoinData()
-      this.intervalId.push(setInterval(this.getAllCoinData, 500 * 10))
-    },
-
     getAllCoinData() {
-      _.map(this.favorites, (coin, coinId) => {
+      console.log("---getCoinData---")
+      _.map(this.myFavorites, (coin, coinId) => {
         this.getCoinData(coin, coinId)
       })
     },
 
     async getCoinData({from, to, market}, coinId) {
-      console.log("---getCoinData---")
-      const record = _.find(this.myFavorites, {from, to, market})
-
-      if (!record) {
-        const coinName = Vue.$coinMeta.Data[from].FullName
-        const baseURl = Vue.$coinMeta.BaseImageUrl
-        const coinUrl = Vue.$coinMeta.Data[from].ImageUrl
-        const coinImg = baseURl + coinUrl
-
-        Vue.set(this.myFavorites, coinId, {
-          from,
-          to,
-          market,
-          title: `${coinName} - ${market}`,
-          media: `<img src='${coinImg}' width='50'>`,
-          link: `/coin-detail/${from}/${to}/${market}`
-        })
-      }
-
+      const coinName = Vue.$coinMeta.Data[from].FullName
+      const baseURl = Vue.$coinMeta.BaseImageUrl
+      const coinUrl = Vue.$coinMeta.Data[from].ImageUrl
+      const coinImg = baseURl + coinUrl
       const price = await api.coinCurrent(from, to, market)
       console.log('price', price)
-      Vue.set(this.myFavorites[coinId], 'subtitle', `${Vue.options.filters.thousand(price)} ${to}`)
-
       const yPrice = await api.coinYesterday(from, to, market)
-      Vue.set(this.myFavorites[coinId], 'text', `${Vue.options.filters.thousand(yPrice)} ${to}`)
+
+      Vue.set(this.myFavorites, coinId, _.assign({
+        from,
+        to,
+        market,
+        title: `${coinName} - ${market}`,
+        media: `<img src='${coinImg}' width='50'>`,
+        link: `/coin-detail/${from}/${to}/${market}`,
+        subtitle: `${Vue.options.filters.thousand(price)} ${to}`,
+        text: `${Vue.options.filters.thousand(yPrice)} ${to}`
+      }))
     },
 
     removeAllFavorites() {
@@ -149,12 +143,8 @@ export default {
 
   watch: {
     favorites: function () {
-      this.getAllCoinData()
+      this.myFavorites = _.cloneDeep(this.favorites)
     },
-
-    coinMetaLoaded: function() {
-      this.triggerGetAllCoinData()
-    }
   },
 
   components: {

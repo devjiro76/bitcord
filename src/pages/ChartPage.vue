@@ -189,9 +189,6 @@ export default {
             splitLine: {show: false}
           }
         ],
-        //grid: {
-        //  bottom: 80
-        //},
         grid: [
           {
             left: '80px',
@@ -206,6 +203,10 @@ export default {
           }
         ],
         dataZoom: [{
+          show : true,
+          realtime: true,
+          start : 75,
+          end : 100,
           textStyle: {
             color: '#8392A5'
           },

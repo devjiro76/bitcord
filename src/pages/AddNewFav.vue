@@ -66,9 +66,23 @@ export default {
       'coinMeta',
     ]),
     filteredCoins() {
-      console.log('sample', _.sampleSize(Vue.$coinMeta.Data, 1))
-      const overZero = _.filter(Vue.$coinMeta.Data, coin => coin.TotalCoinSupply > 0)
-      return overZero
+      const availbleList = [
+        'BTC',
+        'ETH',
+        'XRP',
+        'BCH',
+        'DASH',
+        //'XMR', //모네로
+        //EOS',
+        //'QAU', //퀀텀
+      ]
+
+      const coins = _.filter(Vue.$coinMeta.Data, coin => {
+        return !!availbleList.includes(coin.Name.toUpperCase())
+      })
+
+      //const coins = _.filter(Vue.$coinMeta.Data, coin => coin.TotalCoinSupply > 0)
+      return coins
     },
     searchedCoins() {
       if (!this.searchKeyword || !this.searchKeyword.length) return false
