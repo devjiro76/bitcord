@@ -1,28 +1,8 @@
-# Framework7 Vue + Webpack App Template
-
-A full-featured Framework7 + Vue + Webpack setup with hot-reload & css extraction. Based on [Vue Webpack Boilerplate](https://github.com/vuejs-templates/webpack)
-
-## Build Setup
-
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-```
-
-## Project Structure
-
-* `src/assets` - folder with static assets (images)
-* `src/components` - folder with custom `.vue` components
-* `src/css` - put custom app CSS styles here. Don't forget to import them in `main.js`
-* `src/pages` - app `.vue` pages
-* `src/main.js` - main app file where you include/import all required libs and init app
-* `src/routes.js` - app routes
-* `src/app.vue` - main app structure/component# framework7
 # bitcord
-# bitcord
+Framework7 + Vue + Webpack
+
+## Target 
+비트코드는 다양한 해외 API를 통해 수집된 정보로 가장 빠르고 정확한 정보를 실시간으로 제공합니다. 직관적인 현재 가격을 다양한 환율로 제공하고, 트레이딩 뷰를 통해 깊이있는 차트를 이용할 수 있습니다.
+
+## Status
+- Stopped (Now I prefer react-native)
